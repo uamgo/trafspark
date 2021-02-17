@@ -40,3 +40,14 @@ option("password","traf123").
 option("numPartitions",20).
 option("batchsize","1000").
 save();
+
+-------
+# 方言独立使用说明，此处与上述执行过程无关   
+代码调用：   
+```
+import org.apache.spark.sql.jdbc.TrafT4Dialect
+import org.apache.spark.sql.jdbc.JdbcDialects
+val dialect = new TrafT4Dialect 
+JdbcDialects.registerDialect(dialect)
+
+```
