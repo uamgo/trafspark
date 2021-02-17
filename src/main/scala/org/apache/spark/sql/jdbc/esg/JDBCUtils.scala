@@ -753,12 +753,11 @@ object JDBCUtils extends Logging {
     //构造sql语句
     mode match {
       case CustomSaveMode.Update =>
-        val duplicateSetting = rddSchema.fields.map(x => dialect.quoteIdentifier(x.name)).map(name ⇒ s"$name=?").mkString(",")
-        s"INSERT INTO $table ($columns) VALUES ($placeholders) ON DUPLICATE KEY UPDATE $duplicateSetting"
+        s"UPSERT USING LOAD INTO $table ($columns) VALUES ($placeholders)"
       case CustomSaveMode.Append | CustomSaveMode.Overwrite =>
-        s"INSERT INTO $table ($columns) VALUES ($placeholders)"
+        s"UPSERT USING LOAD INTO $table ($columns) VALUES ($placeholders)"
       case CustomSaveMode.Ignore =>
-        s"INSERT IGNORE INTO $table ($columns) VALUES ($placeholders)"
+        s"UPSERT USING LOAD INTO $table ($columns) VALUES ($placeholders)"
       case _ ⇒ throw new IllegalArgumentException(s"$mode is illegal")
     }
   }

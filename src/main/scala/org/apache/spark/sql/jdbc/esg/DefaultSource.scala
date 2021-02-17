@@ -42,12 +42,15 @@ class DefaultSource extends CreatableRelationProvider with RelationProvider with
 
     val partitionInfo = if (partitionColumn == null) {
       //TODO 新加高版本的安全校验
-      assert(lowerBound == null && upperBound == null, "When 'partitionColumn' is not specified.")
+      //assert(lowerBound == null && upperBound == null, "When 'partitionColumn' is not specified.")
       null
     } else {
       //TODO 新加高版本的安全校验
-      assert(lowerBound.nonEmpty && upperBound.nonEmpty && numPartitions.nonEmpty, s"When 'partitionColumn' is specified.")
-      JDBCPartitioningInfo(partitionColumn.toString, IntegerType, lowerBound.toString.toLong, upperBound.toString.toLong, numPartitions.toString.toInt)
+      //assert(lowerBound.nonEmpty && upperBound.nonEmpty && numPartitions.nonEmpty, s"When 'partitionColumn' is specified.")
+      if ( lowerBound != null && lowerBound.nonEmpty)
+        JDBCPartitioningInfo(partitionColumn.toString, IntegerType, lowerBound.toString.toLong, upperBound.toString.toLong, numPartitions.toString.toInt)
+      else
+        null
     }
     val parts = columnPartition(partitionInfo)
     JDBCRelation(parts, jdbcOptions)(sqlContext.sparkSession)
